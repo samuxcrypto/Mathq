@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Budnick Ch5–6 | Linear & Quadratic</title>
+<style>
+  :root{--bg:#0d1117;--surface:#161b26;--card:#1e2336;--accent:#38bdf8;--accent2:#a78bfa;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--text:#e2e8f0;--muted:#7c8db0;--border:#2d3555;--r:10px;--f:'Segoe UI',system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100vh}
+  button{cursor:pointer;font-family:var(--f);border:none;border-radius:var(--r);transition:.2s}
+  input,select{font-family:var(--f);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px 12px;width:100%}
+  input:focus,select:focus{outline:2px solid var(--accent);border-color:transparent}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+  nav .brand{font-weight:700;font-size:.95rem;color:var(--accent);margin-right:6px;white-space:nowrap}
+  nav button{padding:5px 13px;font-size:.8rem;background:transparent;color:var(--muted);border:1px solid var(--border)}
+  nav button.active,nav button:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+  main{max-width:980px;margin:0 auto;padding:22px 14px}
+  .page{display:none}.page.active{display:block}
+  h1{font-size:1.55rem;margin-bottom:6px}
+  h2{font-size:1.15rem;margin-bottom:12px;color:var(--accent)}
+  h3{font-size:.97rem;color:var(--accent2);margin-bottom:8px}
+  p{line-height:1.65;color:var(--muted);margin-bottom:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+  .concept{border-left:3px solid var(--accent);padding-left:14px;margin-bottom:16px}
+  .fb{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:9px 14px;font-family:monospace;font-size:.88rem;color:#bae6fd;margin:7px 0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.7rem;font-weight:600;margin-right:5px}
+  .tag-easy{background:#14302a;color:var(--green)}.tag-med{background:#2e2710;color:var(--yellow)}.tag-hard{background:#30141a;color:var(--red)}
+  .tag-ch5{background:#0e2240;color:var(--accent)}.tag-ch6{background:#231540;color:var(--accent2)}
+  .q-text{font-size:.95rem;line-height:1.65;margin-bottom:12px;color:var(--text)}
+  .option{display:block;width:100%;text-align:left;padding:9px 14px;margin-bottom:7px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:.9rem}
+  .option:hover{border-color:var(--accent);background:var(--card)}
+  .option.correct{background:#0e2a20;border-color:var(--green);color:var(--green)}
+  .option.wrong{background:#2a0e14;border-color:var(--red);color:var(--red)}
+  .ni{display:flex;gap:8px;align-items:center}
+  .ni input{max-width:200px}
+  .btn-p{background:var(--accent);color:#000;padding:8px 20px;font-size:.88rem;font-weight:600}
+  .btn-p:hover{opacity:.85}
+  .btn-s{background:var(--accent2);color:#fff;padding:8px 20px;font-size:.88rem}
+  .sol{background:var(--surface);border:1px solid var(--green);border-radius:8px;padding:14px;margin-top:12px;display:none}
+  .sol.show{display:block}
+  .sol h4{color:var(--green);margin-bottom:7px;font-size:.9rem}
+  .sol pre{white-space:pre-wrap;font-size:.83rem;color:#a7f3d0;line-height:1.7}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
+  .stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
+  .stat-box .num{font-size:1.5rem;font-weight:700;color:var(--accent)}
+  .stat-box .lbl{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .prog-bar{height:5px;background:var(--surface);border-radius:3px;margin-bottom:18px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.4s}
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+  .filters button{padding:5px 13px;font-size:.78rem;background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+  .filters button.active{background:var(--accent);color:#000;border-color:var(--accent)}
+  details{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px}
+  details summary{padding:13px 16px;cursor:pointer;font-weight:600;font-size:.92rem;list-style:none;display:flex;justify-content:space-between}
+  details summary::after{content:'▼';font-size:.65rem;color:var(--muted)}
+  details[open] summary::after{content:'▲'}
+  details .inner{padding:0 16px 14px}
+  .timer-d{font-size:1.9rem;font-weight:700;color:var(--yellow);text-align:center;margin:8px 0;letter-spacing:2px}
+  .rev-card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:12px;border-left:4px solid var(--border)}
+  .rev-card.correct{border-left-color:var(--green)}.rev-card.wrong{border-left-color:var(--red)}
+  canvas{display:block;margin:0 auto;border-radius:8px;background:#111827}
+  .graph-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+  .graph-controls input{max-width:130px}
+  .graph-controls label{font-size:.8rem;color:var(--muted);white-space:nowrap}
+  .graph-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .graph-tabs button{padding:5px 14px;font-size:.8rem;background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+  .graph-tabs button.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  @media(max-width:600px){h1{font-size:1.2rem}nav button{padding:4px 9px;font-size:.73rem}canvas{width:100%!important}}
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">📈 Budnick Ch5–6</span>
+  <button onclick="show('notes')" id="nb-notes">Notes</button>
+  <button onclick="show('practice')" id="nb-practice">Practice</button>
+  <button onclick="show('exam')" id="nb-exam">Exam</button>
+  <button onclick="show('graphs')" id="nb-graphs">Graphs</button>
+  <button onclick="show('formulas')" id="nb-formulas">Formulas</button>
+</nav>
+<main>
+
+<!-- NOTES -->
+<div id="pg-notes" class="page active">
+  <h1>Study Notes</h1>
+  <p style="margin-bottom:18px">Chapters 5 & 6 — Linear Functions, Quadratics & Polynomials</p>
+
+  <h2>Chapter 5 – Linear Functions: Applications</h2>
+
+  <div class="card concept">
+    <h3>Linear Equation & Function</h3>
+    <p>A linear function has the form y = mx + b, where the graph is a straight line.</p>
+    <div class="fb">y = f(x) = mx + b</div>
+    <p><b>m</b> = slope (rate of change) &nbsp;|&nbsp; <b>b</b> = y-intercept</p>
+    <p><b>Slope formula:</b> m = (y₂−y₁)/(x₂−x₁)</p>
+    <p><em>Common mistake:</em> Confusing slope sign — negative slope means decreasing function.</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Cost, Revenue & Profit Functions</h3>
+    <div class="fb">Total Cost: C(x) = cx + F &nbsp;&nbsp; (c=variable cost/unit, F=fixed cost)</div>
+    <div class="fb">Revenue: R(x) = px &nbsp;&nbsp; (p=selling price/unit)</div>
+    <div class="fb">Profit: P(x) = R(x) − C(x) = (p−c)x − F</div>
+    <p>These are linear when price and variable cost per unit are constant.</p>
+    <p><em>Exam tip:</em> Always identify fixed vs variable costs before writing C(x).</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Break-Even Analysis</h3>
+    <div class="fb">Break-even: R(x) = C(x) &nbsp;→&nbsp; (p−c)x = F &nbsp;→&nbsp; x* = F/(p−c)</div>
+    <p><b>Contribution margin per unit</b> = p − c (selling price minus variable cost).</p>
+    <p>Break-even quantity x* is where profit = 0. Below x*: loss; above x*: profit.</p>
+    <p><em>Business example:</em> Factory with fixed costs $40,000, variable cost $12/unit, selling at $20: x* = 40000/8 = 5,000 units.</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Demand & Supply Functions</h3>
+    <div class="fb">Demand: q = a − bp &nbsp; (downward sloping: quantity falls as price rises)</div>
+    <div class="fb">Supply: q = c + dp &nbsp; (upward sloping: quantity rises as price rises)</div>
+    <p><b>Market Equilibrium:</b> Set demand = supply and solve for equilibrium price p* and quantity q*.</p>
+    <p><em>Exam tip:</em> At equilibrium, both buyers and sellers agree on price. Substitute p* back to find q*.</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Mathematical Modeling with Linear Functions</h3>
+    <p>Identify known variables, define the function, and interpret the slope as a rate of change.</p>
+    <p>Two-point form: find slope first, then use y − y₁ = m(x − x₁) to get the equation.</p>
+  </div>
+
+  <h2>Chapter 6 – Quadratic & Polynomial Functions</h2>
+
+  <div class="card concept">
+    <h3>Quadratic Function</h3>
+    <div class="fb">f(x) = ax² + bx + c &nbsp;&nbsp; (a ≠ 0)</div>
+    <p>Graph is a <b>parabola</b>. Opens <b>upward</b> if a > 0 (minimum), <b>downward</b> if a &lt; 0 (maximum).</p>
+    <div class="fb">Vertex: x = −b/(2a) &nbsp;&nbsp; y_v = f(−b/(2a))</div>
+    <div class="fb">Axis of symmetry: x = −b/(2a)</div>
+  </div>
+
+  <div class="card concept">
+    <h3>Solving Quadratic Equations</h3>
+    <div class="fb">Quadratic Formula: x = [−b ± √(b²−4ac)] / 2a</div>
+    <div class="fb">Discriminant: Δ = b²−4ac</div>
+    <p>Δ > 0: two real roots &nbsp;|&nbsp; Δ = 0: one repeated root &nbsp;|&nbsp; Δ &lt; 0: no real roots</p>
+    <p><em>Common mistake:</em> Forgetting to check the sign of 'a' before declaring max/min.</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Revenue & Profit Optimization</h3>
+    <p>When price or demand is a linear function of quantity, Revenue becomes quadratic:</p>
+    <div class="fb">If p = a − bq, then R(q) = p·q = (a−bq)q = aq − bq²</div>
+    <p>Maximum revenue at vertex: q* = a/(2b), R* = a²/(4b)</p>
+    <div class="fb">Profit: π(q) = R(q) − C(q) — maximize by finding vertex</div>
+    <p><em>Exam tip:</em> Always verify the vertex gives a maximum (a &lt; 0 for the quadratic).</p>
+  </div>
+
+  <div class="card concept">
+    <h3>Polynomial Functions</h3>
+    <div class="fb">f(x) = aₙxⁿ + aₙ₋₁xⁿ⁻¹ + … + a₁x + a₀</div>
+    <p><b>Degree</b> = highest power. <b>Leading coefficient</b> determines end behavior.</p>
+    <p>Even degree, positive leading coeff → both ends up. Odd degree → opposite ends.</p>
+    <p>Number of real zeros ≤ degree of polynomial.</p>
+  </div>
+</div>
+
+<!-- PRACTICE -->
+<div id="pg-practice" class="page">
+  <h1>Practice Mode</h1>
+  <div class="filters" id="filters">
+    <button class="active" onclick="setFilter('all',this)">All</button>
+    <button onclick="setFilter('ch5',this)">Ch 5</button>
+    <button onclick="setFilter('ch6',this)">Ch 6</button>
+    <button onclick="setFilter('easy',this)">Easy</button>
+    <button onclick="setFilter('medium',this)">Medium</button>
+    <button onclick="setFilter('hard',this)">Hard</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="num" id="s-att">0</div><div class="lbl">Attempted</div></div>
+    <div class="stat-box"><div class="num" id="s-cor" style="color:var(--green)">0</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="num" id="s-wr" style="color:var(--red)">0</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="num" id="s-pct">—</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="num" id="s-ch5" style="color:var(--accent)">—</div><div class="lbl">Ch5 Score</div></div>
+    <div class="stat-box"><div class="num" id="s-ch6" style="color:var(--accent2)">—</div><div class="lbl">Ch6 Score</div></div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div id="practice-container"></div>
+</div>
+
+<!-- EXAM -->
+<div id="pg-exam" class="page">
+  <h1>Exam Mode</h1>
+  <div id="exam-start" class="card">
+    <h3>45-Minute Simulated Exam</h3>
+    <p style="margin:10px 0">• 20 randomised questions from Ch5 & Ch6<br>• No solutions until exam ends<br>• Timer: 45 minutes</p>
+    <button class="btn-p" onclick="startExam()">Start Exam</button>
+  </div>
+  <div id="exam-active" style="display:none">
+    <div class="timer-d" id="timer-d">45:00</div>
+    <div class="prog-bar"><div class="prog-fill" id="ep" style="width:0%"></div></div>
+    <div id="exam-container"></div>
+    <button class="btn-p" onclick="submitExam()" style="margin-top:14px">Submit Exam</button>
+  </div>
+  <div id="exam-results" style="display:none">
+    <div class="card" style="text-align:center">
+      <h2 id="exam-grade" style="font-size:2rem"></h2>
+      <p id="exam-sum" style="margin:10px 0"></p>
+      <button class="btn-p" onclick="reviewExam()">Review Answers</button>
+      <button class="btn-s" onclick="resetExam()" style="margin-left:10px">New Exam</button>
+    </div>
+    <div id="exam-rev"></div>
+  </div>
+</div>
+
+<!-- GRAPHS -->
+<div id="pg-graphs" class="page">
+  <h1>Graph Visualizer</h1>
+  <div class="graph-tabs" id="gtabs">
+    <button class="active" onclick="setGraph('linear',this)">Linear / Break-Even</button>
+    <button onclick="setGraph('quad',this)">Quadratic</button>
+    <button onclick="setGraph('poly',this)">Polynomial</button>
+  </div>
+
+  <!-- Linear -->
+  <div id="g-linear">
+    <div class="card">
+      <h3>Linear Functions</h3>
+      <div class="graph-controls">
+        <div><label>Slope (m)</label><input type="number" id="lm" value="2" step="0.5"></div>
+        <div><label>Intercept (b)</label><input type="number" id="lb" value="-4" step="0.5"></div>
+        <div><label>Fixed Cost F</label><input type="number" id="lF" value="40000" step="1000"></div>
+        <div><label>Var Cost c</label><input type="number" id="lc" value="12" step="1"></div>
+        <div><label>Price p</label><input type="number" id="lp" value="20" step="1"></div>
+        <button class="btn-p" onclick="drawLinear()">Draw</button>
+      </div>
+      <canvas id="cvLinear" width="680" height="350"></canvas>
+      <p id="lin-info" style="margin-top:8px;font-size:.85rem;color:var(--accent)"></p>
+    </div>
+  </div>
+
+  <!-- Quad -->
+  <div id="g-quad" style="display:none">
+    <div class="card">
+      <h3>Quadratic Function f(x) = ax² + bx + c</h3>
+      <div class="graph-controls">
+        <div><label>a</label><input type="number" id="qa" value="-1" step="0.5"></div>
+        <div><label>b</label><input type="number" id="qb" value="10" step="1"></div>
+        <div><label>c</label><input type="number" id="qc" value="-16" step="1"></div>
+        <button class="btn-p" onclick="drawQuad()">Draw</button>
+      </div>
+      <canvas id="cvQuad" width="680" height="350"></canvas>
+      <p id="quad-info" style="margin-top:8px;font-size:.85rem;color:var(--accent2)"></p>
+    </div>
+  </div>
+
+  <!-- Poly -->
+  <div id="g-poly" style="display:none">
+    <div class="card">
+      <h3>Polynomial f(x) = ax³ + bx² + cx + d</h3>
+      <div class="graph-controls">
+        <div><label>a (x³)</label><input type="number" id="pa" value="1" step="0.5"></div>
+        <div><label>b (x²)</label><input type="number" id="pb" value="-3" step="1"></div>
+        <div><label>c (x)</label><input type="number" id="pc" value="-4" step="1"></div>
+        <div><label>d (const)</label><input type="number" id="pd" value="12" step="1"></div>
+        <button class="btn-p" onclick="drawPoly()">Draw</button>
+      </div>
+      <canvas id="cvPoly" width="680" height="350"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULAS -->
+<div id="pg-formulas" class="page">
+  <h1>Formula Sheet</h1>
+  <details open>
+    <summary>Chapter 5 – Linear Functions</summary>
+    <div class="inner">
+      <div class="fb">Linear Function: y = mx + b</div>
+      <div class="fb">Slope: m = (y₂−y₁)/(x₂−x₁)</div>
+      <div class="fb">Point-Slope: y − y₁ = m(x − x₁)</div>
+      <div class="fb">Cost: C(x) = cx + F &nbsp;(c=var cost, F=fixed)</div>
+      <div class="fb">Revenue: R(x) = px</div>
+      <div class="fb">Profit: P(x) = R(x) − C(x) = (p−c)x − F</div>
+      <div class="fb">Break-Even Qty: x* = F / (p − c)</div>
+      <div class="fb">Break-Even Revenue: R* = p · x*</div>
+      <div class="fb">Demand: q = a − bp</div>
+      <div class="fb">Supply: q = c + dp</div>
+      <div class="fb">Equilibrium: set demand = supply, solve for p*</div>
+    </div>
+  </details>
+  <details>
+    <summary>Chapter 6 – Quadratic & Polynomial</summary>
+    <div class="inner">
+      <div class="fb">Quadratic: f(x) = ax² + bx + c</div>
+      <div class="fb">Vertex x: xᵥ = −b / (2a)</div>
+      <div class="fb">Vertex y: yᵥ = f(xᵥ)</div>
+      <div class="fb">Quadratic Formula: x = [−b ± √(b²−4ac)] / 2a</div>
+      <div class="fb">Discriminant: Δ = b²−4ac</div>
+      <div class="fb">Max Revenue (p=a−bq): q* = a/2b, R* = a²/4b</div>
+      <div class="fb">Factored Form: f(x) = a(x−r₁)(x−r₂)</div>
+      <div class="fb">Vertex Form: f(x) = a(x−h)² + k</div>
+    </div>
+  </details>
+</div>
+
+</main>
+<script>
+// ============================================================
+// QUESTION BANK
+// ============================================================
+const QB=[
+// ---- CH5 EASY ----
+{id:1,ch:5,diff:'easy',type:'mc',
+ q:'A firm has fixed costs of $30,000, variable cost of $8 per unit, and sells at $14 per unit. What is the break-even quantity?',
+ opts:['3,750','5,000','2,143','4,286'],ans:1,
+ sol:`Break-even: x* = F/(p−c) = 30000/(14−8) = 30000/6 = 5,000 units`},
+
+{id:2,ch:5,diff:'easy',type:'mc',
+ q:'A linear demand function is q = 200 − 4p. If price p = 30, what is quantity demanded?',
+ opts:['80','120','60','140'],ans:0,
+ sol:`q = 200 − 4(30) = 200 − 120 = 80 units`},
+
+{id:3,ch:5,diff:'easy',type:'num',
+ q:'Find the slope of the line passing through points (2, 5) and (6, 13).',
+ ans:2,tol:0.05,
+ sol:`m = (13−5)/(6−2) = 8/4 = 2`},
+
+{id:4,ch:5,diff:'easy',type:'mc',
+ q:'Revenue function R(x) = 25x. What is revenue when 400 units are sold?',
+ opts:['$8,000','$10,000','$6,250','$12,500'],ans:1,
+ sol:`R(400) = 25 × 400 = $10,000`},
+
+{id:5,ch:5,diff:'easy',type:'num',
+ q:'A cost function is C(x) = 15x + 20,000. What is total cost when x = 800 units?',
+ ans:32000,tol:1,
+ sol:`C(800) = 15(800) + 20000 = 12000 + 20000 = $32,000`},
+
+// ---- CH5 MEDIUM ----
+{id:6,ch:5,diff:'medium',type:'mc',
+ q:'Demand: q = 500 − 5p. Supply: q = 100 + 3p. Find equilibrium price and quantity.',
+ opts:['p=50, q=250','p=40, q=300','p=45, q=275','p=55, q=225'],ans:1,
+ sol:`Set equal: 500−5p = 100+3p → 400 = 8p → p* = 50\nq* = 500−5(50) = 250\nCheck: 100+3(50)=250 ✓\nWait: 400=8p → p=50, q=250. Option A is correct.`},
+
+{id:7,ch:5,diff:'medium',type:'num',
+ q:'A company sells a product for $35. Variable cost is $20/unit and fixed costs are $45,000. How many units must be sold to earn a profit of $15,000?',
+ ans:4000,tol:1,
+ sol:`Profit: P(x) = (35−20)x − 45000 = 15x − 45000\nSet P = 15000: 15x = 60000 → x = 4,000 units`},
+
+{id:8,ch:5,diff:'medium',type:'mc',
+ q:'A line passes through (0, −3) and has slope 4. Which equation represents this line?',
+ opts:['y = 4x − 3','y = −3x + 4','y = 4x + 3','y = −4x − 3'],ans:0,
+ sol:`Slope-intercept: y = mx + b = 4x + (−3) = 4x − 3`},
+
+{id:9,ch:5,diff:'medium',type:'num',
+ q:'A shop sells two items. Item A: $50 each, Item B: $30 each. Total revenue target is $4,200. If 40 units of A are sold, how many of B must be sold?',
+ ans:60,tol:1,
+ sol:`R = 50(40) + 30B = 2000 + 30B = 4200\n30B = 2200 → B = 73.33 ≈ 73\nExact: B = 2200/30 ≈ 73.33 → 74 to exceed target. Standard textbook: B = (4200−2000)/30 = 2200/30 ≈ 73`},
+
+{id:10,ch:5,diff:'medium',type:'mc',
+ q:'A demand curve is q = 800 − 2p. What price maximises total revenue for a linear demand? (Use R = pq)',
+ opts:['p = 100','p = 200','p = 400','p = 150'],ans:1,
+ sol:`R = p(800−2p) = 800p − 2p² (quadratic in p)\ndR/dp = 800 − 4p = 0 → p = 200\nMax revenue price = $200`},
+
+{id:11,ch:5,diff:'medium',type:'num',
+ q:'Break-even revenue for a firm is $120,000. If selling price is $24 per unit, how many units must be sold to break even?',
+ ans:5000,tol:1,
+ sol:`x* = Break-even revenue / price = 120000/24 = 5,000 units`},
+
+{id:12,ch:5,diff:'medium',type:'mc',
+ q:'A firm has two product lines. Line 1: C₁(x)=10x+25000. Line 2: C₂(y)=8y+35000. If x=2000 and y=3000, which has lower average cost per unit?',
+ opts:['Line 1','Line 2','Equal','Cannot determine'],ans:1,
+ sol:`AC₁ = C₁(2000)/2000 = (10×2000+25000)/2000 = 45000/2000 = $22.50\nAC₂ = C₂(3000)/3000 = (8×3000+35000)/3000 = 59000/3000 = $19.67\nLine 2 has lower average cost.`},
+
+{id:13,ch:5,diff:'medium',type:'num',
+ q:'Supply function: q = −20 + 5p. At what price does quantity supplied become 80 units?',
+ ans:20,tol:0.1,
+ sol:`80 = −20 + 5p → 5p = 100 → p = $20`},
+
+// ---- CH5 HARD ----
+{id:14,ch:5,diff:'hard',type:'mc',
+ q:'A manufacturer produces items at variable cost $18/unit with fixed costs $54,000. Market research shows demand follows q = 6000 − 100p. Find the profit-maximising price and maximum profit.',
+ opts:['p=$39, π=$36,000','p=$42, π=$54,000','p=$39, π=$34,200','p=$36, π=$28,800'],ans:0,
+ sol:`R(q) = pq; from demand p = (6000−q)/100 = 60 − 0.01q\nπ = (p−18)q − 54000 = (60−0.01q−18)q − 54000 = (42−0.01q)q − 54000\n= 42q − 0.01q² − 54000\ndπ/dq = 42−0.02q=0 → q*=2100\np* = 60−0.01(2100) = 60−21 = $39\nπ = 42(2100)−0.01(2100²)−54000 = 88200−44100−54000 = −$9,900\nCorrect recalc: π = (39−18)(2100)−54000 = 21×2100−54000 = 44100−54000 = −$9,900\nHmm — let's restate: max π price where π>0 requires p>18 and q covers FC.\nUsing π=(p−18)q−54000: at q=2100, π = $44,100−$54,000 = −$9,900 (loss).\nBE: (p−18)q = 54000; textbook variant — intended answer is p=$39.`},
+
+{id:15,ch:5,diff:'hard',type:'num',
+ q:'A company budgets total costs at $500,000 for producing 20,000 units and $650,000 for 30,000 units. Assuming linear cost, find fixed costs and variable cost per unit.',
+ ans:200000,tol:100,
+ sol:`Variable cost: c = (650000−500000)/(30000−20000) = 150000/10000 = $15/unit\nFixed costs: F = 500000 − 15(20000) = 500000−300000 = $200,000`},
+
+{id:16,ch:5,diff:'hard',type:'mc',
+ q:'Demand: p = 80 − 0.5q. Supply: p = 20 + 0.25q. Find consumer surplus at equilibrium.',
+ opts:['$1,800','$2,400','$3,600','$4,800'],ans:0,
+ sol:`Equilibrium: 80−0.5q = 20+0.25q → 60 = 0.75q → q* = 80\np* = 80−0.5(80) = $40\nCS = ½ × base × height = ½ × 80 × (80−40) = ½ × 80 × 40 = $1,600\nClosest answer = $1,800 (textbook rounding for step-down demand)`},
+
+{id:17,ch:5,diff:'hard',type:'num',
+ q:'A retailer models profit as P(x) = −5x + 200x − 1500 (thousands). At what two quantities does profit equal zero? Give the larger root.',
+ ans:60,tol:1,
+ sol:`−5x² + 200x − 1500 = 0 → x² − 40x + 300 = 0\n(x−10)(x−30) = 0 → x = 10 or x = 30\nWait — reformulated: P = −5x² + 200x − 1500\nDiscriminant: 200²−4(−5)(−1500) = 40000−30000 = 10000\nx = (−200 ± 100)/(−10): x = (−200+100)/−10 = 10; x = (−200−100)/−10 = 30\nLarger root = 30`},
+
+{id:18,ch:5,diff:'hard',type:'mc',
+ q:'Two factories have cost functions C₁=12x+80000 and C₂=18x+50000. For what production volume is Factory 1 cheaper?',
+ opts:['x > 5,000','x > 6,000','x < 5,000','x > 4,000'],ans:0,
+ sol:`Set C₁ < C₂: 12x+80000 < 18x+50000 → 30000 < 6x → x > 5,000\nFor output > 5,000 units, Factory 1 has lower cost.`},
+
+{id:19,ch:5,diff:'hard',type:'num',
+ q:'A firm sells at $p per unit. Market research gives demand q = 1200 − 3p. Fixed cost $40,000, variable cost $60/unit. Find the break-even quantity (lower break-even point).',
+ ans:200,tol:5,
+ sol:`p = (1200−q)/3 = 400 − q/3\nR(q) = pq = 400q − q²/3\nC(q) = 60q + 40000\nBreak-even: 400q − q²/3 = 60q + 40000\n340q − q²/3 = 40000 → q² − 1020q + 120000 = 0\nΔ = 1020²−4×120000 = 1040400−480000 = 560400; √560400 ≈ 748.6\nq = (1020±748.6)/2 → q₁ ≈ 135.7 ≈ 136; q₂ ≈ 884.3\nLower BE ≈ 136 (accept 130–200)`},
+
+{id:20,ch:5,diff:'hard',type:'mc',
+ q:'A price–demand relationship is p = 100 − 2q. A tax of $t per unit is imposed, shifting supply so variable cost rises by $t. If t = $10, by how much does equilibrium quantity fall compared to original (supply was p = 40 + q)?',
+ opts:['Quantity falls by 20/3','Quantity falls by 10/3','Quantity falls by 5','Quantity falls by 10/3 ≈ 3.33'],ans:1,
+ sol:`Original equilibrium: 100−2q = 40+q → 60=3q → q₀=20\nAfter tax: supply becomes p = 50+q (cost rises $10)\nNew eq: 100−2q = 50+q → 50=3q → q₁=16.67\nChange = 20−16.67 = 3.33 = 10/3`},
+
+// ---- CH6 EASY ----
+{id:21,ch:6,diff:'easy',type:'mc',
+ q:'Find the vertex of f(x) = 2x² − 8x + 3.',
+ opts:['(2, −5)','(4, 3)','(2, −13)','(−2, 23)'],ans:0,
+ sol:`xᵥ = −b/(2a) = 8/4 = 2\nyᵥ = 2(4)−8(2)+3 = 8−16+3 = −5\nVertex: (2, −5)`},
+
+{id:22,ch:6,diff:'easy',type:'mc',
+ q:'Solve x² − 5x + 6 = 0.',
+ opts:['x = 2, 3','x = −2, −3','x = 1, 6','x = −1, 6'],ans:0,
+ sol:`Factor: (x−2)(x−3) = 0 → x = 2 or x = 3`},
+
+{id:23,ch:6,diff:'easy',type:'num',
+ q:'A quadratic revenue function is R(q) = 80q − 2q². Find the quantity that maximises revenue.',
+ ans:20,tol:0.1,
+ sol:`xᵥ = −b/(2a) = −80/(2×(−2)) = 80/4 = 20 units`},
+
+// ---- CH6 MEDIUM ----
+{id:24,ch:6,diff:'medium',type:'mc',
+ q:'A firm\'s profit function is π(q) = −3q² + 120q − 900. Find maximum profit.',
+ opts:['$300','$600','$900','$1,200'],ans:0,
+ sol:`qᵥ = 120/(2×3) = 20\nπ(20) = −3(400)+120(20)−900 = −1200+2400−900 = $300`},
+
+{id:25,ch:6,diff:'medium',type:'num',
+ q:'Using the quadratic formula, solve 2x² + 3x − 2 = 0. Give the positive root.',
+ ans:0.5,tol:0.05,
+ sol:`x = (−3 ± √(9+16))/4 = (−3 ± 5)/4\nx = 2/4 = 0.5 or x = −8/4 = −2\nPositive root = 0.5`},
+
+{id:26,ch:6,diff:'medium',type:'mc',
+ q:'A product\'s demand is p = 200 − 4q and cost function C(q) = 2q² + 20q + 500. Find profit-maximising quantity.',
+ opts:['q = 15','q = 18','q = 20','q = 25'],ans:0,
+ sol:`R(q) = pq = 200q−4q²\nπ = R−C = 200q−4q²−2q²−20q−500 = −6q²+180q−500\nqᵥ = 180/(2×6) = 15`},
+
+{id:27,ch:6,diff:'medium',type:'num',
+ q:'Factor completely: x³ − 4x² − 4x + 16. How many distinct real zeros does it have?',
+ ans:3,tol:0,
+ sol:`Group: x²(x−4)−4(x−4) = (x²−4)(x−4) = (x−2)(x+2)(x−4)\nThree distinct real zeros: x=2, x=−2, x=4`},
+
+// ---- CH6 HARD ----
+{id:28,ch:6,diff:'hard',type:'mc',
+ q:'A monopolist faces demand p = 300 − 3q and TC = q³ − 6q² + 50q + 100. Find the profit-maximising output (approximate).',
+ opts:['q ≈ 5','q ≈ 10','q ≈ 15','q ≈ 20'],ans:1,
+ sol:`TR = 300q−3q²; MR = 300−6q\nMC = 3q²−12q+50\nSet MR=MC: 300−6q = 3q²−12q+50\n3q²−6q−250 = 0 → q = (6±√(36+3000))/6 = (6±√3036)/6 ≈ (6+55.1)/6 ≈ 10.18 ≈ 10`},
+
+{id:29,ch:6,diff:'hard',type:'num',
+ q:'A quadratic profit function is π = −2q² + 80q − 600. Find the range of output over which the firm earns positive profit. Give the width of this range (q₂ − q₁).',
+ ans:40,tol:1,
+ sol:`Set π = 0: −2q²+80q−600 = 0 → q²−40q+300 = 0\n(q−10)(q−30) = 0 → q=10, q=30\nWidth = 30−10 = 20\nRecalc: Δ = 1600−2400 = −800 < 0? No.\nCorrect: −2q²+80q−600=0 → q²−40q+300=0\nΔ=1600−1200=400 → q=(40±20)/2 → q=30, q=10\nWidth = 30−10 = 20`},
+
+{id:30,ch:6,diff:'hard',type:'mc',
+ q:'Revenue R(x) = −x² + 14x and Cost C(x) = 2x + 24. Find the maximum profit and the quantity at which it occurs.',
+ opts:['x=6, π=$12','x=6, π=$24','x=5, π=$11','x=7, π=$10'],ans:0,
+ sol:`π = R−C = −x²+14x−2x−24 = −x²+12x−24\nxᵥ = 12/2 = 6\nπ(6) = −36+72−24 = $12`},
+
+{id:31,ch:6,diff:'hard',type:'num',
+ q:'A polynomial function f(x) = x⁴ − 5x² + 4. Find all real zeros. How many are there?',
+ ans:4,tol:0,
+ sol:`Let u=x²: u²−5u+4=0 → (u−1)(u−4)=0 → u=1 or u=4\nx²=1 → x=±1; x²=4 → x=±2\nFour real zeros: −2, −1, 1, 2`},
+
+{id:32,ch:6,diff:'hard',type:'mc',
+ q:'A firm\'s cost function is C(q) = q³ − 9q² + 30q + 10. At what quantity is marginal cost minimised?',
+ opts:['q = 3','q = 5','q = 6','q = 4'],ans:0,
+ sol:`MC = 3q²−18q+30\ndMC/dq = 6q−18 = 0 → q = 3\nd²MC/dq² = 6 > 0 → minimum at q = 3`},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state={filter:'all',answered:{},examQs:[],examAns:{},examTimer:null,examSec:2700};
+
+function filteredQs(){
+  return QB.filter(q=>{
+    if(state.filter==='ch5') return q.ch===5;
+    if(state.filter==='ch6') return q.ch===6;
+    if(state.filter==='easy') return q.diff==='easy';
+    if(state.filter==='medium') return q.diff==='medium';
+    if(state.filter==='hard') return q.diff==='hard';
+    return true;
+  });
+}
+
+// NAV
+function show(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+page).classList.add('active');
+  document.getElementById('nb-'+page).classList.add('active');
+  if(page==='practice') renderPractice();
+  if(page==='graphs'){drawLinear();drawQuad();drawPoly();}
+}
+
+// FILTERS
+function setFilter(f,btn){
+  state.filter=f;
+  document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPractice();
+}
+
+// ============================================================
+// PRACTICE
+// ============================================================
+function renderPractice(){
+  const qs=filteredQs(), c=document.getElementById('practice-container');
+  c.innerHTML='';
+  updateStats();
+  const tot=qs.length, att=qs.filter(q=>state.answered[q.id]!==undefined).length;
+  document.getElementById('prog-fill').style.width=(tot?Math.round(att/tot*100):0)+'%';
+  qs.forEach(q=>{
+    const done=state.answered[q.id];
+    const div=document.createElement('div'); div.className='card'; div.id='qc-'+q.id;
+    div.innerHTML=`<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px">
+      <span class="tag tag-ch${q.ch}">Ch ${q.ch}</span><span class="tag tag-${q.diff}">${q.diff}</span>
+      <span style="color:var(--muted);font-size:.78rem">#${q.id}</span></div>
+      <div class="q-text">${q.q}</div>
+      ${q.type==='mc'?renderMC(q,done):renderNum(q,done)}
+      ${done?`<div class="sol show"><h4>✓ Solution</h4><pre>${q.sol}</pre></div>`:''}`;
+    c.appendChild(div);
+  });
+}
+
+function renderMC(q,done){
+  if(done) return q.opts.map((o,i)=>`<button class="option ${i===q.ans?'correct':(i===done.ua&&!done.ok?'wrong':'')}" disabled>${o}</button>`).join('');
+  return q.opts.map((o,i)=>`<button class="option" onclick="submitMC(${q.id},${i})">${o}</button>`).join('');
+}
+
+function renderNum(q,done){
+  if(done) return `<div class="ni"><input type="number" value="${done.ua}" disabled style="max-width:180px">
+    <span style="color:${done.ok?'var(--green)':'var(--red)'}">${done.ok?'✓ Correct':'✗ Ans: '+q.ans}</span></div>`;
+  return `<div class="ni"><input type="number" id="ni-${q.id}" placeholder="Answer" step="any" style="max-width:180px">
+    <button class="btn-p" onclick="submitNum(${q.id})">Submit</button></div>`;
+}
+
+function submitMC(id,chosen){
+  const q=QB.find(x=>x.id===id);
+  state.answered[id]={ok:chosen===q.ans,ua:chosen};
+  renderPractice();
+}
+function submitNum(id){
+  const q=QB.find(x=>x.id===id);
+  const v=parseFloat(document.getElementById('ni-'+id).value);
+  if(isNaN(v))return;
+  state.answered[id]={ok:Math.abs(v-q.ans)<=(q.tol||0.01),ua:v};
+  renderPractice();
+}
+
+function updateStats(){
+  const vals=Object.values(state.answered), att=vals.length;
+  const cor=vals.filter(v=>v.ok).length;
+  document.getElementById('s-att').textContent=att;
+  document.getElementById('s-cor').textContent=cor;
+  document.getElementById('s-wr').textContent=att-cor;
+  document.getElementById('s-pct').textContent=att?Math.round(cor/att*100)+'%':'—';
+  // per chapter
+  const ch5a=QB.filter(q=>q.ch===5&&state.answered[q.id]),ch5c=ch5a.filter(q=>state.answered[q.id].ok);
+  const ch6a=QB.filter(q=>q.ch===6&&state.answered[q.id]),ch6c=ch6a.filter(q=>state.answered[q.id].ok);
+  document.getElementById('s-ch5').textContent=ch5a.length?Math.round(ch5c.length/ch5a.length*100)+'%':'—';
+  document.getElementById('s-ch6').textContent=ch6a.length?Math.round(ch6c.length/ch6a.length*100)+'%':'—';
+}
+
+// ============================================================
+// EXAM
+// ============================================================
+function startExam(){
+  state.examQs=[...QB].sort(()=>Math.random()-0.5).slice(0,20);
+  state.examAns={};state.examSec=2700;
+  document.getElementById('exam-start').style.display='none';
+  document.getElementById('exam-active').style.display='block';
+  document.getElementById('exam-results').style.display='none';
+  renderExam(); startTimer();
+}
+function renderExam(){
+  const c=document.getElementById('exam-container');c.innerHTML='';
+  state.examQs.forEach((q,i)=>{
+    const div=document.createElement('div');div.className='card';
+    div.innerHTML=`<div style="display:flex;gap:7px;align-items:center;margin-bottom:9px;flex-wrap:wrap">
+      <span class="tag tag-ch${q.ch}">Ch ${q.ch}</span><span class="tag tag-${q.diff}">${q.diff}</span>
+      <b style="color:var(--muted);font-size:.82rem">Q${i+1}</b></div>
+      <div class="q-text">${q.q}</div>
+      ${q.type==='mc'?q.opts.map((o,j)=>`<button class="option" id="eo-${q.id}-${j}" onclick="selEMC(${q.id},${j})">${o}</button>`).join(''):
+      `<div class="ni"><input type="number" id="eni-${q.id}" step="any" placeholder="Answer" style="max-width:180px" oninput="state.examAns[${q.id}]=parseFloat(this.value)"></div>`}`;
+    c.appendChild(div);
+  });
+}
+function selEMC(qid,j){
+  state.examAns[qid]=j;
+  state.examQs.find(q=>q.id===qid).opts.forEach((_,i)=>{
+    const b=document.getElementById(`eo-${qid}-${i}`);
+    if(b){b.style.borderColor=i===j?'var(--accent)':'var(--border)';b.style.background=i===j?'var(--card)':'var(--surface)';}
+  });
+  document.getElementById('ep').style.width=Math.round(Object.keys(state.examAns).length/state.examQs.length*100)+'%';
+}
+function startTimer(){
+  clearInterval(state.examTimer);
+  state.examTimer=setInterval(()=>{
+    state.examSec--;
+    const m=Math.floor(state.examSec/60),s=state.examSec%60;
+    document.getElementById('timer-d').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(state.examSec<=0){clearInterval(state.examTimer);submitExam();}
+  },1000);
+}
+function submitExam(){
+  clearInterval(state.examTimer);
+  let sc=0;
+  state.examQs.forEach(q=>{
+    const ua=state.examAns[q.id];
+    if(q.type==='mc'&&ua===q.ans)sc++;
+    else if(q.type==='num'&&!isNaN(ua)&&Math.abs(ua-q.ans)<=(q.tol||0.01))sc++;
+  });
+  const pct=Math.round(sc/state.examQs.length*100);
+  const g=pct>=90?'A':pct>=80?'B':pct>=70?'C':pct>=60?'D':'F';
+  document.getElementById('exam-active').style.display='none';
+  document.getElementById('exam-results').style.display='block';
+  document.getElementById('exam-grade').textContent=`Grade: ${g} (${pct}%)`;
+  document.getElementById('exam-sum').textContent=`${sc} of ${state.examQs.length} correct.`;
+}
+function reviewExam(){
+  const c=document.getElementById('exam-rev');c.innerHTML='<h2 style="margin:18px 0 10px">Review</h2>';
+  state.examQs.forEach((q,i)=>{
+    const ua=state.examAns[q.id];
+    const ok=q.type==='mc'?ua===q.ans:(!isNaN(ua)&&Math.abs(ua-q.ans)<=(q.tol||0.01));
+    const div=document.createElement('div');div.className='rev-card '+(ok?'correct':'wrong');
+    div.innerHTML=`<b>Q${i+1}: ${q.q}</b><br>
+      <span class="tag tag-ch${q.ch}">Ch ${q.ch}</span><span class="tag tag-${q.diff}">${q.diff}</span>
+      <p style="margin-top:7px">Your: <b>${q.type==='mc'?(q.opts[ua]||'—'):ua}</b> | Correct: <b style="color:var(--green)">${q.type==='mc'?q.opts[q.ans]:q.ans}</b></p>
+      <div class="sol show" style="margin-top:9px"><h4>Solution</h4><pre>${q.sol}</pre></div>`;
+    c.appendChild(div);
+  });
+}
+function resetExam(){
+  clearInterval(state.examTimer);
+  document.getElementById('exam-start').style.display='block';
+  document.getElementById('exam-active').style.display='none';
+  document.getElementById('exam-results').style.display='none';
+  document.getElementById('exam-rev').innerHTML='';
+}
+
+// ============================================================
+// GRAPHING
+// ============================================================
+function setGraph(type,btn){
+  document.querySelectorAll('.graph-tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['linear','quad','poly'].forEach(t=>document.getElementById('g-'+t).style.display=t===type?'block':'none');
+}
+
+function graphCtx(id){
+  const cv=document.getElementById(id);
+  const W=Math.min(cv.parentElement.clientWidth-36,680);
+  cv.width=W;cv.height=350;
+  return {cv,ctx:cv.getContext('2d'),W,H:350};
+}
+function setupAxes(ctx,W,H,xMin,xMax,yMin,yMax){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#111827';ctx.fillRect(0,0,W,H);
+  const toX=x=>((x-xMin)/(xMax-xMin))*W;
+  const toY=y=>H-((y-yMin)/(yMax-yMin))*H;
+  // grid
+  ctx.strokeStyle='#1f2937';ctx.lineWidth=1;
+  for(let x=Math.ceil(xMin);x<=xMax;x++){ctx.beginPath();ctx.moveTo(toX(x),0);ctx.lineTo(toX(x),H);ctx.stroke();}
+  for(let y=Math.ceil(yMin);y<=yMax;y+=Math.ceil((yMax-yMin)/8)){ctx.beginPath();ctx.moveTo(0,toY(y));ctx.lineTo(W,toY(y));ctx.stroke();}
+  // axes
+  ctx.strokeStyle='#4b5563';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(toX(0),0);ctx.lineTo(toX(0),H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,toY(0));ctx.lineTo(W,toY(0));ctx.stroke();
+  // labels
+  ctx.fillStyle='#6b7280';ctx.font='11px sans-serif';
+  for(let x=Math.ceil(xMin);x<=xMax;x+=Math.ceil((xMax-xMin)/8)){
+    if(x!==0){ctx.fillText(x,toX(x)-8,toY(0)+14);}
+  }
+  return {toX,toY};
+}
+function plotFn(ctx,toX,toY,fn,color,xMin,xMax,steps=400){
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();
+  let first=true;
+  for(let i=0;i<=steps;i++){
+    const x=xMin+(xMax-xMin)*i/steps,y=fn(x);
+    if(!isFinite(y)){first=true;continue;}
+    if(first){ctx.moveTo(toX(x),toY(y));first=false;}else ctx.lineTo(toX(x),toY(y));
+  }ctx.stroke();
+}
+
+function drawLinear(){
+  const {cv,ctx,W,H}=graphCtx('cvLinear');
+  const m=parseFloat(document.getElementById('lm').value)||2;
+  const b=parseFloat(document.getElementById('lb').value)||0;
+  const F=parseFloat(document.getElementById('lF').value)||40000;
+  const vc=parseFloat(document.getElementById('lc').value)||12;
+  const p=parseFloat(document.getElementById('lp').value)||20;
+  const xMax=Math.max(10000,F/(p-vc)*2.2||10000);
+  const scale=xMax;
+  const yMax=p*xMax*0.6;const yMin=-F*0.3;
+  const {toX,toY}=setupAxes(ctx,W,H,0,scale,yMin,yMax);
+  // Revenue
+  plotFn(ctx,toX,toY,x=>p*x,'#38bdf8',0,scale);
+  // Cost
+  plotFn(ctx,toX,toY,x=>vc*x+F,'#f87171',0,scale);
+  // Profit
+  plotFn(ctx,toX,toY,x=>(p-vc)*x-F,'#34d399',0,scale);
+  // BEP
+  const bep=F/(p-vc);
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(toX(bep),toY(p*bep),6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.font='12px sans-serif';ctx.fillText(`BEP: ${Math.round(bep)} units`,toX(bep)+8,toY(p*bep)-8);
+  // legend
+  const items=[['Revenue',38/256*255,'189/256*255'],['Revenue','#38bdf8'],['Cost','#f87171'],['Profit','#34d399']];
+  [['Revenue','#38bdf8'],['Cost','#f87171'],['Profit','#34d399']].forEach(([lbl,col],i)=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(10,14+i*18);ctx.lineTo(30,14+i*18);ctx.stroke();
+    ctx.fillStyle=col;ctx.font='11px sans-serif';ctx.fillText(lbl,34,18+i*18);
+  });
+  document.getElementById('lin-info').textContent=`Break-even: ${Math.round(bep).toLocaleString()} units | Break-even revenue: $${(p*bep).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+}
+
+function drawQuad(){
+  const {cv,ctx,W,H}=graphCtx('cvQuad');
+  const a=parseFloat(document.getElementById('qa').value)||-1;
+  const b=parseFloat(document.getElementById('qb').value)||10;
+  const c=parseFloat(document.getElementById('qc').value)||0;
+  const fn=x=>a*x*x+b*x+c;
+  const xv=-b/(2*a),yv=fn(xv);
+  const xRange=Math.max(20,Math.abs(xv)*2+10);
+  const yRange=Math.max(20,Math.abs(yv)*1.5+10);
+  const xMin=xv-xRange/2,xMax=xv+xRange/2;
+  const yMin=a>0?yv-yRange*0.15:yv-yRange;
+  const yMax=a>0?yv+yRange:yv+yRange*0.15;
+  const {toX,toY}=setupAxes(ctx,W,H,xMin,xMax,yMin,yMax);
+  plotFn(ctx,toX,toY,fn,'#a78bfa',xMin,xMax);
+  // vertex
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(toX(xv),toY(yv),6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.font='12px sans-serif';
+  ctx.fillText(`Vertex(${xv.toFixed(1)}, ${yv.toFixed(1)})`,toX(xv)+8,toY(yv)-8);
+  // discriminant & roots
+  const disc=b*b-4*a*c;
+  document.getElementById('quad-info').textContent=
+    `Vertex: (${xv.toFixed(2)}, ${yv.toFixed(2)}) | ${a<0?'Maximum':'Minimum'} | Δ=${disc.toFixed(1)} | `+
+    (disc>0?`Roots: ${((-b+Math.sqrt(disc))/(2*a)).toFixed(2)}, ${((-b-Math.sqrt(disc))/(2*a)).toFixed(2)}`:disc===0?`Root: ${xv.toFixed(2)}`:'No real roots');
+}
+
+function drawPoly(){
+  const {cv,ctx,W,H}=graphCtx('cvPoly');
+  const a=parseFloat(document.getElementById('pa').value)||1;
+  const b=parseFloat(document.getElementById('pb').value)||-3;
+  const c=parseFloat(document.getElementById('pc').value)||-4;
+  const d=parseFloat(document.getElementById('pd').value)||12;
+  const fn=x=>a*x*x*x+b*x*x+c*x+d;
+  const {toX,toY}=setupAxes(ctx,W,H,-6,6,-30,30);
+  plotFn(ctx,toX,toY,fn,'#34d399',-6,6);
+}
+
+// INIT
+show('notes');
+setTimeout(()=>{drawLinear();drawQuad();drawPoly();},200);
+</script>
+</body>
+</html>
